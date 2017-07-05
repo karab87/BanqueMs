@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Banque</title>
+<link rel="styleSheet" type="text/css" href="css/bootstrap.css" />
+<link rel="styleSheet" type="text/css" href="css/style.css" />
+
+
+</head>
+<body ng-app="myApp" ng-controller="myAppController">
+	<div class="col-md-6 col-sm-12 col-xs-12">
+		<div class="panel panel-info  spacer">
+			<div class="panel-heading">Compte</div>
+			<div class="panel-body">
+				<form action="">
+					<div class="form-group">
+						<label>Code Compte</label> <input type="text"
+							ng-model="code">
+						<button ng-click="chargerCompte()">Charger</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	
+		<div class="col-md-6 col-sm-12 col-xs-12">
+			<div class="panel panel-info spacer">
+				<div class="panel-heading">Etat du compte</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label>Solde:</label> <label ng-bind="compte.solde"></label>
+					</div>
+
+					<div class="form-group">
+						<label>Date de Creation:</label> <label>{{ compte.dateCreation|date: 'yyyy-MM-dd HH:mm:ss' }}</label>
+					</div>
+					<div ng-if="compte.taux">
+						<label>taux</label> <label>{{ compte.taux }}</label>
+
+					</div>
+					<div ng-if="compte.decouvert">
+						<label>Decouvert</label> <label>{{ compte.decouvert }}</label>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	
+
+
+	<div class="col-md-6 col-sm-12 col-xs-12">
+		<div class="panel panel-info spacer">
+			<div class="panel-heading">Operation</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label>Versement:</label> <input type="radio"
+						ng-model="operation.type" value="versement" /> <label>Retrait:</label>
+					<input type="radio" ng-model="operation.type" value="retrait" />
+				</div>
+
+
+
+				<div class="form-group">
+					<label>Montant</label> <input type="text"
+						ng-model="operation.montant" />
+				</div>
+
+				<button ng-click="saveOperation()" class=" btn btn-primary"></button>
+
+
+			</div>
+		</div>
+	</div>
+
+<script  src="js/angular.js"></script>
+<script  >
+	
+var app=angular.module("myApp",[]);
+
+app.controller("myAppController", function($scope,$http){
+	
+	$scope.compte=null;
+	$scope.code=null;
+	$scope.opetation={type:"versement",montant:0}
+	$scope.chargerCompte=function(){
+		
+		$http.get("/comptes/"+$scope.code)
+		.success(function(data){
+			
+			$scope.compte=data;
+		});
+	};
+	
+	
+	/* $scope.saveOperation=function(){
+		$http({
+			method : 'PUT',
+			url	   : $scope.operation.type,
+			data   :"code="+$scope.code+"&montant="+$scope.operation.montant+"&codeEmp=1",
+			headers : {'content-type' : 'application/x-www-form-urlencoded'}
+			
+			})
+			.success(function(data) {
+				$scope.chargerCompte();
+				//$scope.loadOperation();
+			})
+		}; */
+	
+});
+
+</script>
+
+</body>
+</html>
